@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitudes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            border-bottom: 5px solid #2980b9;
+        }
+        input, select, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1c5980;
+        }
+    </style>
+</head>
+<body>
+    <header>Solicitudes</header>
+    <div class="container">
+        <h2>Enviar una Solicitud</h2>
+        <select id="tipoSolicitud">
+            <option value="Vacaciones">Vacaciones</option>
+            <option value="Permiso">Permiso</option>
+            <option value="Otros">Otros</option>
+        </select>
+        <textarea id="detalleSolicitud" rows="4" placeholder="Describa su solicitud"></textarea>
+        <button onclick="enviarSolicitud()">Enviar Solicitud</button>
+        <button onclick="window.history.back()">Volver a la página anterior</button>
+        <div id="mensajeExito" style="color: green; margin-top: 10px;"></div>
+    </div>
+
+    <script>
+        async function enviarSolicitud() {
+            const usuario = localStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'registro.html';
+                return;
+            }
+
+            const tipo = document.getElementById('tipoSolicitud').value;
+            const detalle = document.getElementById('detalleSolicitud').value;
+
+            const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec";
+
+            const respuesta = await fetch(`${url}?accion=solicitud&usuario=${usuario}&tipo=${tipo}&detalle=${detalle}`);
+            const datos = await respuesta.json();
+
+            if (datos.success) {
+                document.getElementById('mensajeExito').textContent = 'Solicitud enviada con éxito.';
+            } else {
+                alert('No se pudo enviar la solicitud.');
+            }
+        }
+    </script>
+</body>
+</html>

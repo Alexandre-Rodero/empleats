@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .login-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2980b9;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #1c5980;
+        }
+        .error {
+            color: red;
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h2>Iniciar Sesión</h2>
+        <input type="text" id="usuario" placeholder="Usuario">
+        <input type="password" id="contrasena" placeholder="Contraseña">
+        <button onclick="iniciarSesion()">Entrar</button>
+        <div id="mensajeError" class="error"></div>
+    </div>
+
+    <script>
+        async function iniciarSesion() {
+            const usuario = document.getElementById('usuario').value;
+            const contrasena = document.getElementById('contrasena').value;
+            const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec";
+
+            const respuesta = await fetch(`${url}?usuario=${usuario}&contrasena=${contrasena}`);
+            const datos = await respuesta.json();
+
+            if (datos.success) {
+                localStorage.setItem('usuario', usuario);
+                window.location.href = 'empleados.html';
+            } else {
+                document.getElementById('mensajeError').textContent = 'Usuario o contraseña incorrectos';
+            }
+        }
+    </script>
+</body>
+</html>

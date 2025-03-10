@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nómina</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ecf0f1;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 26px;
+            font-weight: bold;
+            border-bottom: 5px solid #2980b9;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #34495e;
+            color: white;
+        }
+        button {
+            background: #2980b9;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #1c5980;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        Nómina
+    </header>
+    <div class="container">
+        <h2>Detalles de Nómina</h2>
+        <table id="tablaNomina">
+            <tr>
+                <th>Fecha</th>
+                <th>Salario Base</th>
+                <th>Bonos</th>
+                <th>Deducciones</th>
+                <th>Salario Neto</th>
+            </tr>
+        </table>
+        <button onclick="window.history.back()">Volver a la página anterior</button>
+    </div>
+
+    <script>
+        async function cargarNomina() {
+            const usuario = localStorage.getItem('usuario');
+            if (!usuario) {
+                window.location.href = 'registro.html';
+                return;
+            }
+
+            const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec";
+            const respuesta = await fetch(`${url}?accion=nomina&usuario=${usuario}`);
+            const datos = await respuesta.json();
+
+            if (datos.success) {
+                const tabla = document.getElementById('tablaNomina');
+                datos.nomina.forEach(item => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td>${item.fecha}</td>
+                        <td>${item.salarioBase}</td>
+                        <td>${item.bonos}</td>
+                        <td>${item.deducciones}</td>
+                        <td>${item.salarioNeto}</td>
+                    `;
+                    tabla.appendChild(fila);
+                });
+            } else {
+                alert('No se pudo cargar la nómina');
+            }
+        }
+
+        cargarNomina();
+    </script>
+</body>
+</html>

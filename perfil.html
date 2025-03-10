@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 40px auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            background-color: #1E90FF;
+            padding: 10px;
+            text-align: center;
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #1E90FF;
+            color: white;
+        }
+    </style>
+    <script>
+        async function cargarPerfil() {
+            const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec";
+            const email = sessionStorage.getItem('email');
+            const password = sessionStorage.getItem('password');
+
+            if (!email || !password) {
+                alert('Inicia sesión primero.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const response = await fetch(`${url}?email=${email}&password=${password}`);
+            const data = await response.json();
+
+            if (data.success) {
+                document.getElementById('nombre').textContent = data.nombre;
+                document.getElementById('email').textContent = data.email;
+                document.getElementById('cargo').textContent = data.cargo;
+                document.getElementById('departamento').textContent = data.departamento;
+            } else {
+                alert('Error al cargar perfil: ' + data.message);
+            }
+        }
+        window.onload = cargarPerfil;
+    </script>
+</head>
+<body>
+    <header>Perfil del Empleado</header>
+    <div class="container">
+        <h2>Información Personal</h2>
+        <table>
+            <tr>
+                <th>Nombre</th>
+                <td id="nombre">Cargando...</td>
+            </tr>
+            <tr>
+                <th>Email</th>
+                <td id="email">Cargando...</td>
+            </tr>
+            <tr>
+                <th>Cargo</th>
+                <td id="cargo">Cargando...</td>
+            </tr>
+            <tr>
+                <th>Departamento</th>
+                <td id="departamento">Cargando...</td>
+            </tr>
+        </table>
+
+        <button onclick="window.history.back()">Volver</button>
+    </div>
+</body>
+</html>

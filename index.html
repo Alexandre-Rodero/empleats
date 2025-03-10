@@ -1,83 +1,60 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
-        }
-        input {
-            width: 100%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 10px;
-            background-color: #2980b9;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #1c5980;
-        }
-        .error {
-            color: red;
-            text-align: center;
-            margin-top: 10px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Empleados</title>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
-        <input type="text" id="usuario" placeholder="Usuario">
-        <input type="password" id="contrasena" placeholder="Contraseña">
-        <button onclick="iniciarSesion()">Entrar</button>
-        <div id="mensajeError" class="error"></div>
-    </div>
+  <h1>Registro de Empleados</h1>
+  <form id="formRegistro">
+    <label for="usuario">Usuario:</label>
+    <input type="text" id="usuario" name="usuario" required><br><br>
 
-    <script>
-        async function iniciarSesion() {
-            const usuario = document.getElementById('usuario').value;
-            const contrasena = document.getElementById('contrasena').value;
-            const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec";
+    <label for="contrasena">Contraseña:</label>
+    <input type="password" id="contrasena" name="contrasena" required><br><br>
 
-            // Realiza la solicitud a tu Google Apps Script
-            const respuesta = await fetch(`${url}?usuario=${usuario}&contrasena=${contrasena}`);
-            const datos = await respuesta.json();
+    <button type="submit">Registrar</button>
+  </form>
 
-            // Verifica si la respuesta del servidor es exitosa
-            if (datos.success) {
-                // Guarda el nombre de usuario en localStorage
-                localStorage.setItem('usuario', usuario);
+  <script>
+    // Manejar el envío del formulario
+    document.getElementById('formRegistro').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 
-                // Redirige al portal de empleados
-                window.location.href = 'empleados.html';
-            } else {
-                // Muestra un mensaje de error si las credenciales no son correctas
-                document.getElementById('mensajeError').textContent = 'Usuario o contraseña incorrectos';
-            }
+      // Obtener los valores del formulario
+      const usuario = document.getElementById('usuario').value;
+      const contrasena = document.getElementById('contrasena').value;
+
+      // URL del Google Apps Script para el registro
+      const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec"; // Reemplazar con tu URL
+
+      // Enviar los datos al Google Apps Script
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+          accion: 'registro', // Acción para indicar que es un registro
+          usuario: usuario,
+          contrasena: contrasena
+        }),
+        headers: {
+          'Content-Type': 'application/json'
         }
-    </script>
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          alert('Usuario registrado con éxito');
+          window.location.href = 'empleados.html'; // Redirigir a la página de empleados
+        } else {
+          alert('Error al registrar el usuario. Intenta con otro nombre de usuario.');
+        }
+      })
+      .catch(error => {
+        console.error('Error al registrar:', error);
+        alert('Hubo un problema al registrar el usuario.');
+      });
+    });
+  </script>
 </body>
 </html>

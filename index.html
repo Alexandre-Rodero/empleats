@@ -62,13 +62,19 @@
             const contrasena = document.getElementById('contrasena').value;
             const url = "https://script.google.com/macros/s/AKfycbyKJ4CwH_Hwg4KYm3-BIyK1I8oiNFDhSLBOLaMCfnn-1hf6zPpOtypvZtqf4DdxP1OiJg/exec";
 
+            // Realiza la solicitud a tu Google Apps Script
             const respuesta = await fetch(`${url}?usuario=${usuario}&contrasena=${contrasena}`);
             const datos = await respuesta.json();
 
+            // Verifica si la respuesta del servidor es exitosa
             if (datos.success) {
+                // Guarda el nombre de usuario en localStorage
                 localStorage.setItem('usuario', usuario);
+
+                // Redirige al portal de empleados
                 window.location.href = 'empleados.html';
             } else {
+                // Muestra un mensaje de error si las credenciales no son correctas
                 document.getElementById('mensajeError').textContent = 'Usuario o contraseña incorrectos';
             }
         }
